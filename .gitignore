@@ -5,3 +5,4 @@ queryDB.js
 populateDB.js
 tasks.db
 createDB.js
+*.mp3

@@ -1,7 +1,7 @@
 import { openAI } from "./secrets.js";
 
-const summarizeTasks = async (tasks) => {
-    const prompt = `test test 123 say hi.`;
+
+export const summarizeTasks = async (prompt) => {
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -12,7 +12,7 @@ const summarizeTasks = async (tasks) => {
         body: JSON.stringify({
             model: 'gpt-3.5-turbo',
             messages: [
-                { role: 'system', content: 'You are a helpful assistant.' },
+                { role: 'system', content: 'You are my cool and friendly personal assistant. heres my todays tasks fetched from todo app. please sum those up for me.' },
                 { role: 'user', content: prompt },
             ],
         }),
@@ -20,20 +20,20 @@ const summarizeTasks = async (tasks) => {
 
     if (!response.ok) {
         const errorText = await response.text();
+        console.log(response)
         throw new Error(`Error: ${response.statusText}, ${errorText}`);
     }
 
     const data = await response.json();
+    console.log(data.choices[0].message.content);
     
     return data.choices[0].message.content;
 };
 
 
-const test = async ()=>{
-    const result = await summarizeTasks();
-    console.log(result);
-    
-}
+// const test = async ()=>{
+//     const result = await summarizeTasks("helloo yoyo say something cool");
+//     generateSpeech(result);
+// }
 
-
-test();
+// test();

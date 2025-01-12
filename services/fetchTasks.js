@@ -15,4 +15,3 @@ export const fetchTasks = async () => {
     const tasks = await response.json();
     return tasks;
 };
-

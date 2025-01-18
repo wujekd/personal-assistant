@@ -4,12 +4,14 @@ import { fetchTasks } from './services/fetchTasks.js';
 import { summarizeTasks } from './services/summarizetasks.js';
 import { generateSpeech } from './services/tts.js';
 import { tasksToString } from './utilities/tasksToString.js';
+import cors from "cors";
 
 const app = express();
 const port = 3000;
 
 app.use(express.static('static'));
 app.use(express.json());
+app.use(cors());
 
 
 // app.get('/', (req, res) => {
@@ -17,7 +19,7 @@ app.use(express.json());
 // });
 
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
     console.log(`Server running at http://localhost:${port}/`);
 });
 
@@ -42,6 +44,14 @@ app.get('/sumup', async (req, res) => {
         return res.status(500).send("chujnia: ", e);
     }
 })
+
+
+app.get("/update", (req, res) => {
+    const sensorState = req.query.state;
+    console.log(`Received Sensor State: ${sensorState}`);
+    res.send("OK");
+});
+
 
 //list cron jobs
 app.get('/api/cron', (req, res) => {

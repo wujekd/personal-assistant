@@ -12,7 +12,7 @@ export const summarizeTasks = async (prompt) => {
         body: JSON.stringify({
             model: 'gpt-3.5-turbo',
             messages: [
-                { role: 'system', content: 'You are my cool and friendly personal assistant. heres my todays tasks fetched from todo app. please summarize my todays tasks in a nice motivating paragraph.' },
+                { role: 'system', content: 'You are my cool and friendly personal assistant. heres my todays tasks fetched from todo app. please summarize in a short paragraph.' },
                 { role: 'user', content: prompt },
             ],
         }),

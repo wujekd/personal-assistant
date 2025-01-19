@@ -48,7 +48,9 @@ app.get('/sumup', async (req, res) => {
 
 app.get("/update", (req, res) => {
     const sensorState = req.query.state;
-    console.log(`Received Sensor State: ${sensorState}`);
+    const temp = req.query.temp;
+    const count = req.query.count;
+    console.log(`KEY: ${sensorState} | TEMPERATURE: ${temp} | COUNT: ${count}`);
     res.send("OK");
 });
 

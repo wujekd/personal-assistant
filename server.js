@@ -5,18 +5,50 @@ import { summarizeTasks } from './services/summarizetasks.js';
 import { generateSpeech } from './services/tts.js';
 import { tasksToString } from './utilities/tasksToString.js';
 import cors from "cors";
+import { WebSocketServer } from 'ws';
 
 const app = express();
 const port = 3000;
+const wss = new WebSocketServer({port: 3001})
+
+let state = { temperature: -127, key: 0 }
 
 app.use(express.static('static'));
 app.use(express.json());
 app.use(cors());
 
+wss.on('connection', (ws)=> {
+    console.log("Client connected");
+    ws.send(JSON.stringify(state));
 
-// app.get('/', (req, res) => {
-//     res.send('Hello from Raspberry Piiii!');
-// });
+    ws.on("close", ()=> console.log('websocket closed'));
+});
+
+
+function wsTest(temp, key) {
+    wss.clients.forEach((client) => {
+        if (client.readyState === 1) {
+            client.send(JSON.stringify({temperature: temp, key: key}))
+        }
+    })
+}
+
+app.get('/update-state', (req, res) => {
+    const { temperature, key } = req.query; // Get query parameters
+
+    if (temperature === undefined || key === undefined) {
+        return res.status(400).json({ error: 'Temperature and key state are required' });
+    }
+
+    wsTest(temperature, key);
+    res.json({ message: 'State updated via WebSocket', temperature, key });
+});
+
+app.get("/temperature", (req, res) => {
+    const temp = Math.round(Math.random() * 60)
+    console.log("passing temp as: ", temp)
+    res.status(200).json({temperature : temp})
+})
 
 
 app.listen(port, "0.0.0.0", () => {

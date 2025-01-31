@@ -13,11 +13,14 @@
   "type": "module",
   "description": "",
   "dependencies": {
+    "@google-cloud/local-auth": "^2.1.0",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "googleapis": "^105.0.0",
     "openai": "^4.78.1",
     "play-sound": "^1.1.6",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

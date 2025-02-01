@@ -35,10 +35,10 @@ app.get("/update", (req, res) => {
 
     if (lastKeyState != sensorState){
         console.log("keystate updated: ", lastKeyState) 
-        lastKeyState = key
-        if (key == 1){
+        lastKeyState = sensorState
+        if (sensorState == 1){
             exec(`python3 17on.py`)
-        } else if (key == 0){
+        } else if (sensorState == 0){
             exec(`python3 12off.py`)
         }
     }

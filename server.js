@@ -6,6 +6,15 @@ import { generateSpeech } from './services/tts.js';
 import { tasksToString } from './utilities/tasksToString.js';
 import cors from "cors";
 import { WebSocketServer } from 'ws';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+// Get the directory of the current module
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Use absolute paths for Python scripts
+const scriptOn = path.join(__dirname, "hardware_control_layer/17on.py");
+const scriptOff = path.join(__dirname, "hardware_control_layer/12off.py");
 
 const app = express();
 const port = 3000;
@@ -33,14 +42,20 @@ app.get("/update", (req, res) => {
     const temp = req.query.temp;
     const count = req.query.count;
 
-    if (lastKeyState != sensorState){
-        console.log("keystate updated: ", lastKeyState) 
-        lastKeyState = sensorState
-        if (sensorState == '1'){
-            exec(`python3 hardware_control_layer/17on.py`)
-        } else if (sensorState == '0'){
-            exec(`python3 hardware_control_layer/12off.py`) 
-        }
+    if (lastKeyState !== sensorState) {
+        console.log("keystate updated: ", lastKeyState);
+        lastKeyState = sensorState;
+    
+        const scriptToRun = sensorState === '1' ? scriptOn : scriptOff;
+        
+        exec(`python3 ${scriptToRun}`, (error, stdout, stderr) => {
+            console.log(`Executing: python3 ${scriptToRun}`);
+            if (error) {
+                console.error(`Exec error: ${stderr}`);
+                return;
+            }
+            console.log(`Python Output: ${stdout}`);
+        });
     }
 
     console.log(`KEY: ${sensorState} | TEMPERATURE: ${temp} | COUNT: ${count}`);

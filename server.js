@@ -33,7 +33,7 @@ app.get("/update", (req, res) => {
     const temp = req.query.temp;
     const count = req.query.count;
 
-    if (lastKeyState != key){
+    if (lastKeyState != sensorState){
         console.log("keystate updated: ", lastKeyState) 
         lastKeyState = key
         if (key == 1){

@@ -25,30 +25,36 @@ wss.on('connection', (ws)=> {
 });
 
 
-function wsTest(temp, key) {
-    wss.clients.forEach((client) => {
-        if (client.readyState === 1) {
-            client.send(JSON.stringify({temperature: temp, key: key}))
-        }
-    })
-}
 
 let lastKeyState = null
 
-app.get('/update-state', (req, res) => {
-    const { temperature, key } = req.query;
-
-    if (temperature === undefined || key === undefined) {
-        return res.status(400).json({ error: 'Temperature and key state are required' });
-    }
+app.get("/update", (req, res) => {
+    const sensorState = req.query.state;
+    const temp = req.query.temp;
+    const count = req.query.count;
 
     if (lastKeyState != key){
+        console.log("keystate updated: ", lastKeyState) 
         lastKeyState = key
         if (key == 1){
             exec(`python3 17on.py`)
         } else if (key == 0){
             exec(`python3 12off.py`)
         }
+    }
+
+    console.log(`KEY: ${sensorState} | TEMPERATURE: ${temp} | COUNT: ${count}`);
+    res.send("OK");
+});
+
+
+
+//gui testing 
+app.get('/update-state', (req, res) => {
+    const { temperature, key } = req.query;
+
+    if (temperature === undefined || key === undefined) {
+        return res.status(400).json({ error: 'Temperature and key state are required' });
     }
 
     wsTest(temperature, key);
@@ -59,9 +65,7 @@ app.get('/update-state', (req, res) => {
 
 
 
-
-
-
+//gui dev
 app.get("/temperature", (req, res) => {
     const temp = Math.round(Math.random() * 60)
     console.log("passing temp as: ", temp)
@@ -96,13 +100,7 @@ app.get('/sumup', async (req, res) => {
 })
 
 
-app.get("/update", (req, res) => {
-    const sensorState = req.query.state;
-    const temp = req.query.temp;
-    const count = req.query.count;
-    console.log(`KEY: ${sensorState} | TEMPERATURE: ${temp} | COUNT: ${count}`);
-    res.send("OK");
-});
+
 
 
 //list cron jobs

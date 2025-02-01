@@ -6,6 +6,7 @@ import { generateSpeech } from './services/tts.js';
 import { tasksToString } from './utilities/tasksToString.js';
 import cors from "cors";
 import { WebSocketServer } from 'ws';
+import { exec } from "child_process";
 
 const app = express();
 const port = 3000;
@@ -33,16 +34,34 @@ function wsTest(temp, key) {
     })
 }
 
+let lastKeyState = null
+
 app.get('/update-state', (req, res) => {
-    const { temperature, key } = req.query; // Get query parameters
+    const { temperature, key } = req.query;
 
     if (temperature === undefined || key === undefined) {
         return res.status(400).json({ error: 'Temperature and key state are required' });
     }
 
+    if (lastKeyState != key){
+        lastKeyState = key
+        if (key == 1){
+            exec(`python3 17on.py`)
+        } else if (key == 0){
+            exec(`python3 12off.py`)
+        }
+    }
+
     wsTest(temperature, key);
     res.json({ message: 'State updated via WebSocket', temperature, key });
 });
+
+
+
+
+
+
+
 
 app.get("/temperature", (req, res) => {
     const temp = Math.round(Math.random() * 60)

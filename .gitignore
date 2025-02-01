@@ -5,3 +5,6 @@ populateDB.js
 tasks.db
 createDB.js
 *.mp3
+credentials.json
+service-account.json
+token.json

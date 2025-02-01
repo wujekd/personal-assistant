@@ -6,7 +6,6 @@ import { generateSpeech } from './services/tts.js';
 import { tasksToString } from './utilities/tasksToString.js';
 import cors from "cors";
 import { WebSocketServer } from 'ws';
-import { exec } from "child_process";
 
 const app = express();
 const port = 3000;

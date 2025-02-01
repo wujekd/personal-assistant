@@ -14,7 +14,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Use absolute paths for Python scripts
 const scriptOn = path.join(__dirname, "hardware_control_layer/17on.py");
-const scriptOff = path.join(__dirname, "hardware_control_layer/12off.py");
+const scriptOff = path.join(__dirname, "hardware_control_layer/17off.py");
 
 const app = express();
 const port = 3000;

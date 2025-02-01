@@ -36,9 +36,9 @@ app.get("/update", (req, res) => {
     if (lastKeyState != sensorState){
         console.log("keystate updated: ", lastKeyState) 
         lastKeyState = sensorState
-        if (sensorState == 1){
+        if (sensorState == '1'){
             exec(`python3 hardware_control_layer/17on.py`)
-        } else if (sensorState == 0){
+        } else if (sensorState == '0'){
             exec(`python3 hardware_control_layer/12off.py`) 
         }
     }
